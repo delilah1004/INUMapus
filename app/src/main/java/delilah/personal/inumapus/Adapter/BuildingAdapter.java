@@ -2,9 +2,12 @@ package delilah.personal.inumapus.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +61,8 @@ public class BuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View view) {
                 Context context = view.getContext();
                 Toast.makeText(context, item.getBuildingTitle() + " " + item.getBuilingNumber() + "호관", Toast.LENGTH_SHORT).show();
+
+                view.setBackgroundColor(Color.GRAY);
 
                 Intent intent = new Intent(context, OfficeActivity.class);
 

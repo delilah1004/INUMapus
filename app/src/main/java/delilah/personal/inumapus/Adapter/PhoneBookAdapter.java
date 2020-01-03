@@ -1,9 +1,13 @@
 package delilah.personal.inumapus.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +49,7 @@ public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
         final PhoneBookInfo item = items.get(position);
 
         PhoneBookViewHolder phoneBookViewHolder = (PhoneBookViewHolder) viewHolder;
@@ -58,7 +63,14 @@ public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Toast.makeText(context, item.getPhoneNumber(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, item.getName() + "의 전화번호입니다.", Toast.LENGTH_SHORT).show();
+
+                String phone = "tel:" + item.getPhoneNumber();
+                //Log.d("callcheck",phone);
+
+                Intent call = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
+
+                context.startActivity(call);
             }
         });
     }

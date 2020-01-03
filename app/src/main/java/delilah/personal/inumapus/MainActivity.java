@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onClick(View v) {
                 if (!addedRetire) {
                     mapView.removeAllPOIItems();
+                    addFilterMarker(0);
                     addFilterMarker(1);
-                    addFilterMarker(2);
                     addedRetire = true;
                 } else {
                     mapView.removeAllPOIItems();
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onClick(View v) {
                 if (!addedCafe) {
                     mapView.removeAllPOIItems();
-                    addFilterMarker(3);
+                    addFilterMarker(2);
                     addedCafe = true;
                 } else {
                     mapView.removeAllPOIItems();
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onClick(View v) {
                 if (!addedRest) {
                     mapView.removeAllPOIItems();
-                    addFilterMarker(4);
+                    addFilterMarker(3);
                     addedRest = true;
                 } else {
                     mapView.removeAllPOIItems();
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onClick(View v) {
                 if (!addedConv) {
                     mapView.removeAllPOIItems();
-                    addFilterMarker(5);
+                    addFilterMarker(4);
                     addedConv = true;
                 } else {
                     mapView.removeAllPOIItems();

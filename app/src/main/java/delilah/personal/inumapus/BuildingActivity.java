@@ -5,11 +5,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,7 @@ import retrofit2.Response;
 
 public class BuildingActivity extends AppCompatActivity {
 
-    RecyclerView buildingRecyclerView;
-    RecyclerView.LayoutManager buildingLayoutManager;
+    ListView buildingListView;
 
     private BuildingAdapter buildingAdapter;
 
@@ -37,12 +35,8 @@ public class BuildingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_building);
 
-        buildingRecyclerView = findViewById(R.id.building_recycler_view);
+        buildingListView = findViewById(R.id.building_list_view);
         editSearch = findViewById(R.id.building_search);
-
-        buildingLayoutManager = new LinearLayoutManager(this);
-        buildingRecyclerView.setHasFixedSize(true);
-        buildingRecyclerView.setLayoutManager(buildingLayoutManager);
 
         BuildingInformation();
 
@@ -85,7 +79,7 @@ public class BuildingActivity extends AppCompatActivity {
                 }
 
                 buildingAdapter = new BuildingAdapter(this, buildingInfoArrayList);
-                buildingRecyclerView.setAdapter(buildingAdapter);
+                buildingListView.setAdapter(buildingAdapter);
             }
 
             @Override

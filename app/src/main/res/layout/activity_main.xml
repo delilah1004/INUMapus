@@ -142,7 +142,6 @@
         android:visibility="invisible"
         app:borderWidth="0dp"
         app:fabCustomSize="@dimen/fab_size"
-        app:maxImageSize="@dimen/fab_icon_size"
-        />
+        app:maxImageSize="@dimen/fab_icon_size" />
 
 </RelativeLayout>

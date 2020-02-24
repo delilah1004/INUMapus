@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private FloatingActionButton btn_call, btn_mylocation, fab, fab1, fab3, fab4, fab5, fab6;
     private TextView search;
 
-    private boolean addedAll, addedRetire, addedCafe, addedRest, addedConv = false;
+    private boolean addedAll, addedRetire, addedCafe, addedRest, addedConv, addedMarker = false;
+    private boolean curLocState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         CheckFirstExecute();
 
         declaration();
-
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_mylocation, new MapPOIItem.ImageOffset(46, 55));
-
-        mapView.setCurrentLocationEventListener(this);
 
         if (!checkLocationServicesStatus()) {
             showDialogForLocationServiceSetting();
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         if (!isFirst) { //최초 실행시 true 저장
             SharedPreferences.Editor editor = execute.edit();
             editor.putBoolean("isFirst", true);
-            editor.commit();
+            editor.apply();
             Intent intent = new Intent(MainActivity.this, FirstActivity.class);
             startActivity(intent);
         }
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     protected void onDestroy() {
         super.onDestroy();
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-        mapView.setShowCurrentLocationMarker(false);
+        mapView.setShowCurrentLocationMarker(curLocState);
     }
 
     private void declaration() {
@@ -114,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab6 = findViewById(R.id.btn_all);
 
         mapView = findViewById(R.id.map_view);
+
+        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_mylocation, new MapPOIItem.ImageOffset(46, 55));
+        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.375, 126.633), true);
     }
 
     private void clickListenerSetting() {
@@ -131,13 +131,18 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         btn_mylocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mapView.getCurrentLocationTrackingMode() == MapView.CurrentLocationTrackingMode.TrackingModeOff) {
+                if (!curLocState) {
+                    // 현위치 기능이 꺼져 있을 때 - 켜기
+                    mapView.setCurrentLocationEventListener(MainActivity.this);
                     mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
                     mapView.setShowCurrentLocationMarker(true);
+                    curLocState = true;
                 } else {
+                    // 현위치 기능이 켜져 있을 때 - 끄기
                     mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
                     mapView.setShowCurrentLocationMarker(false);
                     mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.375, 126.633), true);
+                    curLocState = false;
                 }
             }
         });
@@ -163,15 +168,37 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!addedRetire) {
-                    mapView.removeAllPOIItems();
+                if (!addedMarker) {
+                    // 마커가 표시되어 있지 않을 때
                     addFilterMarker(0);
                     addFilterMarker(1);
                     addedRetire = true;
+                    addedMarker = true;
                 } else {
+                    // 마커가 표시되어 있을 때
                     mapView.removeAllPOIItems();
-                    addedRetire = false;
+
+                    if (!addedRetire) {
+                        // 휴게실 마커 추가
+                        addFilterMarker(0);
+                        addFilterMarker(1);
+                        addedAll = false;
+                        addedConv = false;
+                        addedRest = false;
+                        addedCafe = false;
+                        addedRetire = true;
+                    } else {
+                        // 마커 끄기
+                        addedRetire = false;
+                        addedMarker = false;
+                    }
                 }
+                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
+                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
+                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
+                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
+                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
+                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -179,14 +206,35 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!addedCafe) {
-                    mapView.removeAllPOIItems();
+                if (!addedMarker) {
+                    // 마커가 표시되어 있지 않을 때
                     addFilterMarker(2);
                     addedCafe = true;
+                    addedMarker = true;
                 } else {
+                    // 마커가 표시되어 있을 때
                     mapView.removeAllPOIItems();
-                    addedCafe = false;
+
+                    if (!addedCafe) {
+                        // 카페 마커 추가
+                        addFilterMarker(2);
+                        addedAll = false;
+                        addedConv = false;
+                        addedRest = false;
+                        addedCafe = true;
+                        addedRetire = false;
+                    } else {
+                        // 마커 끄기
+                        addedCafe = false;
+                        addedMarker = false;
+                    }
                 }
+                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
+                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
+                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
+                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
+                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
+                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -194,14 +242,35 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!addedRest) {
-                    mapView.removeAllPOIItems();
+                if (!addedMarker) {
+                    // 마커가 표시되어 있지 않을 때
                     addFilterMarker(3);
                     addedRest = true;
+                    addedMarker = true;
                 } else {
+                    // 마커가 표시되어 있을 때
                     mapView.removeAllPOIItems();
-                    addedRest = false;
+
+                    if (!addedRest) {
+                        // 식당 마커 추가
+                        addFilterMarker(3);
+                        addedAll = false;
+                        addedConv = false;
+                        addedRest = true;
+                        addedCafe = false;
+                        addedRetire = false;
+                    } else {
+                        // 마커 끄기
+                        addedRest = false;
+                        addedMarker = false;
+                    }
                 }
+                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
+                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
+                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
+                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
+                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
+                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -209,14 +278,35 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!addedConv) {
-                    mapView.removeAllPOIItems();
+                if (!addedMarker) {
+                    // 마커가 표시되어 있지 않을 때
                     addFilterMarker(4);
                     addedConv = true;
+                    addedMarker = true;
                 } else {
+                    // 마커가 표시되어 있을 때
                     mapView.removeAllPOIItems();
-                    addedConv = false;
+
+                    if (!addedConv) {
+                        // 편의점 마커 추가
+                        addFilterMarker(4);
+                        addedAll = false;
+                        addedConv = true;
+                        addedRest = false;
+                        addedCafe = false;
+                        addedRetire = false;
+                    } else {
+                        // 마커 끄기
+                        addedConv = false;
+                        addedMarker = false;
+                    }
                 }
+                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
+                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
+                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
+                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
+                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
+                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -224,14 +314,35 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         fab6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!addedAll) {
-                    mapView.removeAllPOIItems();
+                if (!addedMarker) {
+                    // 마커가 표시되어 있지 않을 때
                     addAllMarker();
                     addedAll = true;
+                    addedMarker = true;
                 } else {
+                    // 마커가 표시되어 있을 때
                     mapView.removeAllPOIItems();
-                    addedAll = false;
+
+                    if (!addedAll) {
+                        // 전체 건물 마커 추가
+                        addAllMarker();
+                        addedAll = true;
+                        addedConv = false;
+                        addedRest = false;
+                        addedCafe = false;
+                        addedRetire = false;
+                    } else {
+                        // 마커 끄기
+                        addedAll = false;
+                        addedMarker = false;
+                    }
                 }
+                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
+                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
+                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
+                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
+                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
+                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
     }
@@ -303,7 +414,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     private void addFilterMarker(final int f_num) {
-        final MapPOIItem marker = new MapPOIItem();
 
         /*
 
@@ -337,30 +447,60 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             public void onResponse(Call<ArrayList<FilterModel>> call, Response<ArrayList<FilterModel>> response) {
                 ArrayList<FilterModel> filter = response.body();
 
+                MapPOIItem marker = new MapPOIItem();
+
+                for (int i = 0; i < filter.size(); i++) {
+
+                    // 마커 위치
+                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(filter.get(i).lat), Double.valueOf(filter.get(i).log)));
+
+                    // 마커 이름
+                    //marker.setItemName(building.get(i).id + " " + building.get(i).title);
+                    marker.setTag(i);
+
+                    // 마커 모양 커스텀 설정
+                    marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+                    // 마커 이미지
+                    marker.setCustomImageResourceId(R.drawable.ic_marker);
+                    marker.setCustomImageAutoscale(false);
+                    mapView.addPOIItem(marker);
+                }
+
                 // 마커 위치
-                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(37, 126));
+                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(37.3767741), Double.valueOf(126.63464720000002)));
+
                 // 마커 이름
-                //marker.setItemName(filter.get(f_num).title);
+                marker.setItemName(filter.get(f_num).title);
                 Log.d("마커.f_num", String.valueOf(f_num));
-                Log.d("마커.이름",filter.get(f_num).title);
+                Log.d("마커.이름", filter.get(f_num).title);
                 marker.setTag(f_num);
-                // 커스텀 마커 모양
+
+                // 마커 모양 커스텀 설정
                 marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
 
+
+                // 마커 이미지
                 switch (f_num) {
-                    case 1:
-                        // 마커 이미지
+                    case 0:
                         marker.setCustomImageResourceId(R.drawable.marker_w_lounge);
-                    case 2 :
+                        break;
+                    case 1:
                         marker.setCustomImageResourceId(R.drawable.marker_m_lounge);
-                    case 3 :
+                        break;
+                    case 2:
                         marker.setCustomImageResourceId(R.drawable.marker_cafe);
-                    case 4 :
+                        break;
+                    case 3:
                         marker.setCustomImageResourceId(R.drawable.marker_restaurant);
-                    case 5 :
+                        break;
+                    case 4:
                         marker.setCustomImageResourceId(R.drawable.marker_convenience);
+                        break;
+                    default:
+                        break;
                 }
                 marker.setCustomImageAutoscale(false);
+                mapView.addPOIItem(marker);
             }
 
             @Override
@@ -368,8 +508,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
             }
         });
-
-        mapView.addPOIItem(marker);
     }
 
 
@@ -418,13 +556,8 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
-        if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED) {
-            // 허용시, 위치값을 가져옴
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
-
-        } else {
-
-            // 위치 정보가 허용되지 않았을 시 퍼미션 요청
+        if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
+            // 위치 정보가 허용되지 않았을 때, 퍼미션 요청
 
             // 사용자가 위치 정보를 거부한 경우
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])) {
@@ -497,17 +630,14 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case GPS_ENABLE_REQUEST_CODE:
-                // GPS 활성화 체크
+        if (requestCode == GPS_ENABLE_REQUEST_CODE) {
+            // GPS 활성화 체크
+            if (checkLocationServicesStatus()) {
                 if (checkLocationServicesStatus()) {
-                    if (checkLocationServicesStatus()) {
-                        Log.d("@@@", "onActivityResult : GPS 활성화");
-                        checkRunTimePermission();
-                        return;
-                    }
+                    Log.d("@@@", "onActivityResult : GPS 활성화");
+                    checkRunTimePermission();
                 }
-                break;
+            }
         }
     }
 

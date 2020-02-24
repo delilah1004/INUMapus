@@ -1,4 +1,4 @@
-package delilah.personal.inumapus.Adapter;
+package delilah.personal.inumapus.Bin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,7 @@ public class FakeBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Callback<ArrayList<BuildingModel>> b_context;
 
-    private List<BuildingListInfo> items = null;
+    private List<BuildingListInfo> items;
     private ArrayList<BuildingListInfo> buildingInfoArrayList;
 
     public FakeBuildingAdapter(Callback<ArrayList<BuildingModel>> context, List<BuildingListInfo> items) {
@@ -39,7 +39,7 @@ public class FakeBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_view_row_building_list, null);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.building_recyclerview_row, null);
 
         return new BuildingViewHolder(v);
     }
@@ -51,17 +51,17 @@ public class FakeBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         BuildingViewHolder buildingViewHolder = (BuildingViewHolder) viewHolder;
 
         buildingViewHolder.buildingTitle.setText(item.getBuildingTitle());
-        buildingViewHolder.buildingNumber.setText(String.valueOf(item.getBuilingNumber()));
+        buildingViewHolder.buildingNumber.setText(String.valueOf(item.getBuildingNumber()));
 
         buildingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Toast.makeText(context, item.getBuildingTitle() + " " + item.getBuilingNumber() + "호관", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, item.getBuildingTitle() + " " + item.getBuildingNumber() + "호관", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(context, OfficeActivity.class);
 
-                intent.putExtra("number", item.getBuilingNumber());
+                intent.putExtra("number", item.getBuildingNumber());
 
                 context.startActivity(intent);
             }
@@ -71,26 +71,6 @@ public class FakeBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
         return this.items.size();
-    }
-
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        items.clear();
-        if (charText.length() == 0) {
-            items.addAll(buildingInfoArrayList);
-        } else {
-            for (BuildingListInfo buildingListInfo : buildingInfoArrayList) {
-                String title = buildingListInfo.getBuildingTitle();
-                String number = String.valueOf(buildingListInfo.getBuilingNumber());
-                if (title.toLowerCase().contains(charText)) {
-                    items.add(buildingListInfo);
-                }
-                else if (number.toLowerCase().contains(charText)){
-                    items.add(buildingListInfo);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
     public static class BuildingViewHolder extends RecyclerView.ViewHolder {
@@ -103,6 +83,26 @@ public class FakeBuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             buildingTitle = itemView.findViewById(R.id.building_title);
             buildingNumber = itemView.findViewById(R.id.building_number);
         }
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        items.clear();
+        if (charText.length() == 0) {
+            items.addAll(buildingInfoArrayList);
+        } else {
+            for (BuildingListInfo buildingListInfo : buildingInfoArrayList) {
+                String title = buildingListInfo.getBuildingTitle();
+                String number = String.valueOf(buildingListInfo.getBuildingNumber());
+                if (title.toLowerCase().contains(charText)) {
+                    items.add(buildingListInfo);
+                }
+                else if (number.toLowerCase().contains(charText)){
+                    items.add(buildingListInfo);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
 }

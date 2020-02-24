@@ -1,4 +1,4 @@
-package delilah.personal.inumapus.Adapter;
+package delilah.personal.inumapus.Bin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +17,14 @@ import delilah.personal.inumapus.R;
 import delilah.personal.inumapus.model.OfficeModel;
 import retrofit2.Callback;
 
-public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FakeOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Callback<ArrayList<OfficeModel>> o_context;
 
     private List<OfficeListInfo> items = null;
     private ArrayList<OfficeListInfo> officeListInfoArrayList;
 
-    public OfficeAdapter(Callback<ArrayList<OfficeModel>> context, List<OfficeListInfo> items) {
+    public FakeOfficeAdapter(Callback<ArrayList<OfficeModel>> context, List<OfficeListInfo> items) {
         this.o_context = context;
         this.items = items;
         officeListInfoArrayList = new ArrayList<>();

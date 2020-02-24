@@ -24,7 +24,11 @@ public interface NetworkInterface {
     @GET("dbRouter/office")
     Call<ArrayList<OfficeModel>> getOfficeInfo();
 
+
+
     @GET("listRouter/officeListByBuilding/{id}")
     Call<ArrayList<OfficeModel>> getOfficeListByBuilding(@Path("id") int buildingNumber);
+
+    // -> officeListByBuilding/{buildingId} 로 수정해야함.
 
 }

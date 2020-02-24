@@ -2,18 +2,18 @@ package delilah.personal.inumapus.Info;
 
 public class BuildingListInfo {
     public String buildingTitle;
-    public int builingNumber;
+    public String buildingNumber;
 
-    public BuildingListInfo(String title, int number){
+    public BuildingListInfo(String title, String number){
         this.buildingTitle = title;
-        this.builingNumber = number;
+        this.buildingNumber = number;
     }
 
     public String getBuildingTitle() {
         return buildingTitle;
     }
 
-    public int getBuilingNumber() {
-        return builingNumber;
+    public String getBuildingNumber() {
+        return buildingNumber;
     }
 }

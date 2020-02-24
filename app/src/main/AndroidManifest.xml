@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
     <uses-permission android:name="android.permission.DIAL_PHONE" />
 
     <application
@@ -21,7 +20,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="67eea3a57b2cfd8d621c5f01c190b20e"/>
 
-        <activity android:name="delilah.personal.inumapus.SplashActivity"
+        <activity android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,19 +29,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="delilah.personal.inumapus.FirstActivity"
+        <activity android:name=".FirstActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        <activity android:name="delilah.personal.inumapus.MainActivity"
+        <activity android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        <activity android:name="delilah.personal.inumapus.BuildingActivity"
+        <activity android:name=".BuildingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        <activity android:name="delilah.personal.inumapus.OfficeActivity"
+        <activity android:name=".OfficeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        <activity android:name="delilah.personal.inumapus.PhoneBookActivity"
+        <activity android:name=".PhoneBookActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>

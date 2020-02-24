@@ -74,4 +74,3 @@ public class OfficeActivity extends AppCompatActivity {
         });
     }
 }
-

@@ -2,15 +2,14 @@ package delilah.personal.inumapus.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,101 +21,67 @@ import delilah.personal.inumapus.R;
 import delilah.personal.inumapus.model.BuildingModel;
 import retrofit2.Callback;
 
-public class BuildingAdapter extends BaseAdapter {
+public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.BuildingViewHolder> {
 
     private Callback<ArrayList<BuildingModel>> b_context;
-    LayoutInflater inflater;
 
-    private List<BuildingListInfo> items = null;
+    private List<BuildingListInfo> items;
     private ArrayList<BuildingListInfo> buildingInfoArrayList;
 
     public BuildingAdapter(Callback<ArrayList<BuildingModel>> context, List<BuildingListInfo> items) {
         this.b_context = context;
         this.items = items;
-        // inflater = LayoutInflater.from(context);
         buildingInfoArrayList = new ArrayList<BuildingListInfo>();
         buildingInfoArrayList.addAll(items);
     }
 
-    public static class BuildingViewHolder {
-        TextView building_title, building_number;
+    // RecyclerView.ViewHolder 에 override 되는 methods
+    @Override
+    public BuildingViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.building_recyclerview_row, null);
+
+        return new BuildingViewHolder(v);
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull BuildingViewHolder viewHolder, final int position) {
+        final BuildingListInfo item = items.get(position);
+
+        viewHolder.buildingTitle.setText(item.getBuildingTitle());
+        viewHolder.buildingNumber.setText(item.getBuildingNumber());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+
+                Log.d("intent 값",item.getBuildingTitle() + " " + item.getBuildingNumber() + "호관");
+
+                Intent intent = new Intent(context, OfficeActivity.class);
+
+                intent.putExtra("number", Integer.valueOf(item.getBuildingNumber()));
+
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
         return this.items.size();
     }
 
-    @Override
-    public BuildingListInfo getItem(int position) {
-        return items.get(position);
-    }
+    public static class BuildingViewHolder extends RecyclerView.ViewHolder {
+        TextView buildingTitle, buildingNumber;
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        public BuildingViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        final BuildingViewHolder buildingViewHolder;
-        final BuildingListInfo item = items.get(position);
-
-        /* 'list_view_row_building_list' Layout을 inflate하여 view 참조 획득 */
-        if (view == null) {
-            buildingViewHolder = new BuildingViewHolder();
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_view_row_building_list,null);
-
-            /* 'list_view_row_building_list'에 정의된 위젯에 대한 참조 획득 */
-            buildingViewHolder.building_title = (TextView) view.findViewById(R.id.building_title);
-            buildingViewHolder.building_number = (TextView) view.findViewById(R.id.building_number);
-
-        } else {
-            buildingViewHolder = (BuildingViewHolder) view.getTag();
+            buildingTitle = itemView.findViewById(R.id.building_title);
+            buildingNumber = itemView.findViewById(R.id.building_number);
         }
-
-        /* 각 위젯에 세팅된 아이템을 뿌려준다 */
-        buildingViewHolder.building_title.setText(item.getBuildingTitle());
-        buildingViewHolder.building_number.setText(String.valueOf(item.getBuilingNumber()));
-
-        /* (위젯에 대한 이벤트리스너를 지정하고 싶다면 여기에 작성하면된다..) */
-        view.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                Toast.makeText(context, item.getBuildingTitle() + " " + item.getBuilingNumber() + "호관", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, OfficeActivity.class);
-                intent.putExtra("number", item.getBuilingNumber());
-                context.startActivity(intent);
-            }
-        });
-
-        /*
-        final BuildingListInfo item = items.get(position);
-
-        BuildingViewHolder buildingViewHolder = (BuildingViewHolder) viewHolder;
-
-        buildingViewHolder.buildingTitle.setText(item.getBuildingTitle());
-        buildingViewHolder.buildingNumber.setText(String.valueOf(item.getBuilingNumber()));
-
-        buildingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                Toast.makeText(context, item.getBuildingTitle() + " " + item.getBuilingNumber() + "호관", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(context, OfficeActivity.class);
-
-                intent.putExtra("number", item.getBuilingNumber());
-
-                context.startActivity(intent);
-            }
-        });
-         */
-
-        return view;
     }
-
 
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
@@ -126,10 +91,11 @@ public class BuildingAdapter extends BaseAdapter {
         } else {
             for (BuildingListInfo buildingListInfo : buildingInfoArrayList) {
                 String title = buildingListInfo.getBuildingTitle();
-                String number = String.valueOf(buildingListInfo.getBuilingNumber());
+                String number = buildingListInfo.getBuildingNumber();
                 if (title.toLowerCase().contains(charText)) {
                     items.add(buildingListInfo);
-                } else if (number.toLowerCase().contains(charText)) {
+                }
+                else if (number.toLowerCase().contains(charText)){
                     items.add(buildingListInfo);
                 }
             }

@@ -24,15 +24,19 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_from_parents"
                 android:layout_marginRight="@dimen/between_icon_margin"
+                android:fontFamily="@font/nanum_square_round_eb"
                 android:text="학과이름"
                 android:textColor="@color/light"
                 android:textSize="@dimen/position_font_size" />
 
-            <ImageView
-                android:layout_width="2dp"
-                android:layout_height="10dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/light" />
+                android:fontFamily="@font/nanum_square_round_eb"
+                android:text="l"
+                android:textColor="@color/light"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/position"
@@ -40,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/between_icon_margin"
+                android:fontFamily="@font/nanum_square_round_eb"
                 android:text="직위"
                 android:textColor="@color/light"
                 android:textSize="@dimen/position_font_size" />
@@ -58,15 +63,19 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_from_parents"
                 android:layout_marginRight="@dimen/between_icon_margin"
+                android:fontFamily="@font/nanum_square_round_eb"
                 android:text="홍길동"
                 android:textColor="@color/bold"
                 android:textSize="@dimen/name_font_size" />
 
-            <ImageView
-                android:layout_width="2dp"
-                android:layout_height="10dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/bold" />
+                android:fontFamily="@font/nanum_square_round_eb"
+                android:text="l"
+                android:textColor="@color/bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/phone_number"
@@ -74,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/between_icon_margin"
+                android:fontFamily="@font/nanum_square_round_eb"
                 android:text="000-1234-5678"
                 android:textColor="@color/bold"
                 android:textSize="@dimen/name_font_size" />

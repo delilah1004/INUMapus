@@ -1,5 +1,6 @@
 package delilah.personal.inumapus.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,47 +10,48 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-import delilah.personal.inumapus.Info.OfficeListInfo;
 import delilah.personal.inumapus.R;
 import delilah.personal.inumapus.model.OfficeModel;
-import retrofit2.Callback;
 
 public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Callback<ArrayList<OfficeModel>> o_context;
+    private Context context;
+    private ArrayList<OfficeModel> items;
 
-    private List<OfficeListInfo> items = null;
-    private ArrayList<OfficeListInfo> officeListInfoArrayList;
-
-    public OfficeAdapter(Callback<ArrayList<OfficeModel>> context, List<OfficeListInfo> items) {
-        this.o_context = context;
+    public OfficeAdapter(Context context, ArrayList<OfficeModel> items) {
+        this.context = context;
         this.items = items;
-        officeListInfoArrayList = new ArrayList<>();
-        officeListInfoArrayList.addAll(items);
     }
 
-    // RecyclerView.ViewHolder 에 override 되는 methods
+    private static class OfficeViewHolder extends RecyclerView.ViewHolder {
+        TextView roomId, officeTitle;
+
+        private OfficeViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            roomId = itemView.findViewById(R.id.office_number);
+            officeTitle = itemView.findViewById(R.id.office_title);
+        }
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.office_listview_row, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.recyclerview_row_office, viewGroup, false);
 
         return new OfficeViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        final OfficeListInfo item = items.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        final OfficeViewHolder viewHolder = (OfficeViewHolder) holder;
+        final OfficeModel item = items.get(position);
 
-        OfficeViewHolder officeViewHolder = (OfficeViewHolder) viewHolder;
-
-        officeViewHolder.officeNumber.setText(item.getOfficeNumber());
-        officeViewHolder.officeTitle.setText(item.getOfficeTitle());
+        viewHolder.roomId.setText(item.getRoomId());
+        viewHolder.officeTitle.setText(item.getTitle());
     }
-
 
     @Override
     public int getItemCount() {
@@ -60,30 +62,19 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         charText = charText.toLowerCase(Locale.getDefault());
         items.clear();
         if (charText.length() == 0) {
-            items.addAll(officeListInfoArrayList);
+            items.addAll(items);
         } else {
-            for (OfficeListInfo officeListInfo : officeListInfoArrayList) {
-                String title = officeListInfo.getOfficeTitle();
-                String number = officeListInfo.getOfficeNumber();
+            for (OfficeModel office : items) {
+                String title = office.getTitle();
+                String number = office.getRoomId();
                 if (title.toLowerCase().contains(charText)) {
-                    items.add(officeListInfo);
+                    items.add(office);
                 }
                 else if (number.toLowerCase().contains(charText)){
-                    items.add(officeListInfo);
+                    items.add(office);
                 }
             }
         }
         notifyDataSetChanged();
-    }
-
-    public static class OfficeViewHolder extends RecyclerView.ViewHolder {
-
-        TextView officeNumber, officeTitle;
-
-        public OfficeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            officeNumber = itemView.findViewById(R.id.office_number);
-            officeTitle = itemView.findViewById(R.id.office_title);
-        }
     }
 }

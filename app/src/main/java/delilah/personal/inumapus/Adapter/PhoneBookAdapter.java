@@ -3,11 +3,11 @@ package delilah.personal.inumapus.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,104 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
-import delilah.personal.inumapus.Info.PhoneBookInfo;
 import delilah.personal.inumapus.R;
-import delilah.personal.inumapus.model.EmployeeModel;
-import retrofit2.Callback;
+import delilah.personal.inumapus.model.PhoneModel;
 
-public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
+    private Context context;
+    private ArrayList<PhoneModel> unfilteredList, filteredList;
 
-    private Callback<ArrayList<EmployeeModel>> e_context;
-
-    private List<PhoneBookInfo> items = null;
-    private ArrayList<PhoneBookInfo> phoneBookInfoArrayList;
-
-    public PhoneBookAdapter(Callback<ArrayList<EmployeeModel>> context, List<PhoneBookInfo> items) {
-        this.e_context = context;
-        this.items = items;
-        phoneBookInfoArrayList = new ArrayList<PhoneBookInfo>();
-        phoneBookInfoArrayList.addAll(items);
+    public PhoneBookAdapter(Context context, ArrayList<PhoneModel> items) {
+        this.context = context;
+        this.unfilteredList = items;
+        this.filteredList = items;
     }
 
-    // RecyclerView.ViewHolder 에 override 되는 methods
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.phonebook_recyclerview_row, null);
-
-        return new PhoneBookViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
-        final PhoneBookInfo item = items.get(position);
-
-        PhoneBookViewHolder phoneBookViewHolder = (PhoneBookViewHolder) viewHolder;
-
-        phoneBookViewHolder.detailOrgan.setText(item.getDetailOrgan());
-        phoneBookViewHolder.position.setText(item.getPosition());
-        phoneBookViewHolder.name.setText(item.getName());
-        phoneBookViewHolder.phoneNumber.setText(item.getPhoneNumber());
-
-        phoneBookViewHolder.btn_call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                Toast.makeText(context, item.getName() + "의 전화번호입니다.", Toast.LENGTH_SHORT).show();
-
-                String phone = "tel:" + item.getPhoneNumber();
-                //Log.d("callcheck",phone);
-
-                Intent call = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
-
-                context.startActivity(call);
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return this.items.size();
-    }
-
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        items.clear();
-        if (charText.length() == 0) {
-            items.addAll(phoneBookInfoArrayList);
-        } else {
-            for (PhoneBookInfo phoneBookInfo : phoneBookInfoArrayList) {
-                String organ = phoneBookInfo.getDetailOrgan();
-                String position = phoneBookInfo.getPosition();
-                String name = phoneBookInfo.getName();
-                String number = phoneBookInfo.getPhoneNumber();
-                if (organ.toLowerCase().contains(charText)) {
-                    items.add(phoneBookInfo);
-                }
-                else if (position.toLowerCase().contains(charText)){
-                    items.add(phoneBookInfo);
-                }
-                else if (name.toLowerCase().contains(charText)){
-                    items.add(phoneBookInfo);
-                }
-                else if (number.toLowerCase().contains(charText)){
-                    items.add(phoneBookInfo);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
-
-    public static class PhoneBookViewHolder extends RecyclerView.ViewHolder {
-
+    private static class PhoneBookViewHolder extends RecyclerView.ViewHolder {
         TextView detailOrgan, position, name, phoneNumber;
         ImageButton btn_call;
 
-        public PhoneBookViewHolder(@NonNull View itemView) {
+        private PhoneBookViewHolder(@NonNull View itemView) {
             super(itemView);
 
             detailOrgan = itemView.findViewById(R.id.detail_organ);
@@ -123,5 +44,72 @@ public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             btn_call = itemView.findViewById(R.id.btn_call_page);
         }
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.recyclerview_row_phonebook, viewGroup, false);
+
+        return new PhoneBookViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        final PhoneBookViewHolder viewHolder = (PhoneBookViewHolder) holder;
+        final PhoneModel item = filteredList.get(position);
+
+        viewHolder.detailOrgan.setText(item.getDetailOrgan());
+        viewHolder.position.setText(item.getPosition());
+        viewHolder.name.setText(item.getName());
+        viewHolder.phoneNumber.setText(item.getTelephone());
+
+        viewHolder.btn_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, item.getName() + "의 전화번호입니다.", Toast.LENGTH_SHORT).show();
+
+                String phone = "tel:" + item.getTelephone();
+                Intent call = new Intent(Intent.ACTION_DIAL, Uri.parse(phone));
+
+                context.startActivity(call);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.filteredList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charText = charSequence.toString();
+                if(charText.isEmpty()) {
+                    filteredList = unfilteredList;
+                } else {
+                    ArrayList<PhoneModel> filteringList = new ArrayList<>();
+                    for(PhoneModel phone : unfilteredList) {
+                        String name = phone.getName();
+                        String number = phone.getTelephone();
+                        if (name.toLowerCase().contains(charText)||number.toLowerCase().contains(charText)) {
+                            filteringList.add(phone);
+                        }
+                    }
+                    filteredList = filteringList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                notifyDataSetChanged();
+            }
+        };
     }
 }

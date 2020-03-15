@@ -30,15 +30,17 @@ import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
 
-import delilah.personal.inumapus.model.BuildingModel;
+import delilah.personal.inumapus.Object.BuildingMain;
+import delilah.personal.inumapus.Object.Marker;
+import delilah.personal.inumapus.Object.OfficeMain;
 import delilah.personal.inumapus.model.FilterModel;
+import delilah.personal.inumapus.model.MarkerModel;
 import delilah.personal.inumapus.network.NetworkController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
-
     private static final String LOG_TAG = "MainActivity";
 
     private MapView mapView;
@@ -193,12 +195,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         addedMarker = false;
                     }
                 }
-                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
-                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
-                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
-                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
-                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
-                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -229,12 +225,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         addedMarker = false;
                     }
                 }
-                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
-                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
-                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
-                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
-                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
-                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -265,12 +255,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         addedMarker = false;
                     }
                 }
-                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
-                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
-                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
-                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
-                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
-                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -301,12 +285,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         addedMarker = false;
                     }
                 }
-                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
-                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
-                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
-                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
-                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
-                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
 
@@ -337,12 +315,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                         addedMarker = false;
                     }
                 }
-                Log.d("마커상황", "마커 상태 : " + String.valueOf(addedMarker));
-                Log.d("마커상황", "빌딩 : " + String.valueOf(addedAll));
-                Log.d("마커상황", "편의점 : " + String.valueOf(addedConv));
-                Log.d("마커상황", "식당 : " + String.valueOf(addedRest));
-                Log.d("마커상황", "카페 : " + String.valueOf(addedCafe));
-                Log.d("마커상황", "휴게실 : " + String.valueOf(addedRetire));
             }
         });
     }
@@ -382,21 +354,37 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     private void addAllMarker() {
-
-        Call<ArrayList<BuildingModel>> building = NetworkController.getInstance().getNetworkInterface().getBuildingInfo();
-
-        building.enqueue(new Callback<ArrayList<BuildingModel>>() {
+        NetworkController.getInstance().getApiService().getAllMarkers().enqueue(new Callback<MarkerModel>() {
             @Override
-            public void onResponse(Call<ArrayList<BuildingModel>> call, Response<ArrayList<BuildingModel>> response) {
-                ArrayList<BuildingModel> building = response.body();
+            public void onResponse(Call<MarkerModel> call, Response<MarkerModel> response) {
+                MarkerModel markerModel = response.body();
+                ArrayList<Marker> markers = new ArrayList<>();
 
-                for (int i = 0; i < building.size(); i++) {
+                ArrayList<BuildingMain> buildingArrayList = markerModel.getBuilding();
+                ArrayList<OfficeMain> officeArrayList = markerModel.getOffice();
+
+                for (int i = 0; i < buildingArrayList.size(); i++) {
+                    ArrayList<String> officeList = new ArrayList<>();
+                    for (int j = 0; j < officeArrayList.size(); j++) {
+                        if (buildingArrayList.get(i).getBuildingId().equals(officeArrayList.get(j).getBuildingId())) {
+                            officeList.add(officeArrayList.get(j).getTitle());
+                        }
+                    }
+                    Marker marker = new Marker(buildingArrayList.get(i).getBuildingId(),
+                            buildingArrayList.get(i).getBuildingName(), buildingArrayList.get(i).getLat(),
+                            buildingArrayList.get(i).getLog(), officeList);
+                    markers.add(marker);
+                }
+
+                for (int i = 0; i < markers.size(); i++) {
                     MapPOIItem marker = new MapPOIItem();
                     // 마커 위치
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(building.get(i).lat), Double.valueOf(building.get(i).log)));
+                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(markers.get(i).getLat(), markers.get(i).getLog()));
                     // 마커 이름
-                    marker.setItemName(building.get(i).id + " " + building.get(i).title);
+                    marker.setItemName(markers.get(i).getBuildingId() + " " + markers.get(i).getBuildingName());
                     marker.setTag(i);
+                    // 커스텀 말풍선 버튼 없애기
+                    marker.setShowDisclosureButtonOnCalloutBalloon(false);
                     // 커스텀 마커 모양
                     marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
                     // 마커 이미지
@@ -404,103 +392,55 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                     marker.setCustomImageAutoscale(false);
                     mapView.addPOIItem(marker);
                 }
+
             }
 
             @Override
-            public void onFailure(Call<ArrayList<BuildingModel>> call, Throwable t) {
+            public void onFailure(Call<MarkerModel> call, Throwable t) {
 
             }
         });
     }
 
     private void addFilterMarker(final int f_num) {
-
-        /*
-
-        Call<ArrayList<BuildingModel>> building = NetworkController.getInstance().getNetworkInterface().getBuildingInfo();
-
-
-        building.enqueue(new Callback<ArrayList<BuildingModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<BuildingModel>> call, Response<ArrayList<BuildingModel>> response) {
-                ArrayList<BuildingModel> building = response.body();
-
-                // 마커 위치
-                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(building.get(f_num).lat), Double.valueOf(building.get(f_num).log)));
-                // 마커 이름
-                marker.setItemName(building.get(f_num).id + " " + building.get(f_num).title);
-                marker.setTag(f_num);
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<BuildingModel>> call, Throwable t) {
-
-            }
-        });
-
-         */
-
-        Call<ArrayList<FilterModel>> filter = NetworkController.getInstance().getNetworkInterface().getFilterInfo();
-
-        filter.enqueue(new Callback<ArrayList<FilterModel>>() {
+        NetworkController.getInstance().getApiService().getFilterMarkers(f_num).enqueue(new Callback<ArrayList<FilterModel>>() {
             @Override
             public void onResponse(Call<ArrayList<FilterModel>> call, Response<ArrayList<FilterModel>> response) {
                 ArrayList<FilterModel> filter = response.body();
 
-                MapPOIItem marker = new MapPOIItem();
-
                 for (int i = 0; i < filter.size(); i++) {
-
+                    MapPOIItem marker = new MapPOIItem();
                     // 마커 위치
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(filter.get(i).lat), Double.valueOf(filter.get(i).log)));
-
+                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(filter.get(i).lat, filter.get(i).log));
                     // 마커 이름
-                    //marker.setItemName(building.get(i).id + " " + building.get(i).title);
-                    marker.setTag(i);
-
+                    marker.setItemName(filter.get(i).buildingId + "호관 " + filter.get(i).title);
+                    marker.setTag(f_num);
                     // 마커 모양 커스텀 설정
                     marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
                     // 마커 이미지
-                    marker.setCustomImageResourceId(R.drawable.ic_marker);
+                    switch (f_num) {
+                        case 1:
+                            if(filter.get(i).title.substring(0,3).equals("남학생")){
+                                marker.setCustomImageResourceId(R.drawable.marker_m_lounge);
+                            } else {
+                                marker.setCustomImageResourceId(R.drawable.marker_w_lounge);
+                            }
+                            break;
+                        case 2:
+                            marker.setCustomImageResourceId(R.drawable.marker_cafe);
+                            break;
+                        case 3:
+                            marker.setCustomImageResourceId(R.drawable.marker_restaurant);
+                            break;
+                        case 4:
+                            marker.setCustomImageResourceId(R.drawable.marker_convenience);
+                            break;
+                        default:
+                            break;
+                    }
                     marker.setCustomImageAutoscale(false);
                     mapView.addPOIItem(marker);
                 }
-
-                // 마커 위치
-                marker.setMapPoint(MapPoint.mapPointWithGeoCoord(Double.valueOf(37.3767741), Double.valueOf(126.63464720000002)));
-
-                // 마커 이름
-                marker.setItemName(filter.get(f_num).title);
-                Log.d("마커.f_num", String.valueOf(f_num));
-                Log.d("마커.이름", filter.get(f_num).title);
-                marker.setTag(f_num);
-
-                // 마커 모양 커스텀 설정
-                marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-
-
-                // 마커 이미지
-                switch (f_num) {
-                    case 0:
-                        marker.setCustomImageResourceId(R.drawable.marker_w_lounge);
-                        break;
-                    case 1:
-                        marker.setCustomImageResourceId(R.drawable.marker_m_lounge);
-                        break;
-                    case 2:
-                        marker.setCustomImageResourceId(R.drawable.marker_cafe);
-                        break;
-                    case 3:
-                        marker.setCustomImageResourceId(R.drawable.marker_restaurant);
-                        break;
-                    case 4:
-                        marker.setCustomImageResourceId(R.drawable.marker_convenience);
-                        break;
-                    default:
-                        break;
-                }
-                marker.setCustomImageAutoscale(false);
-                mapView.addPOIItem(marker);
             }
 
             @Override
@@ -509,7 +449,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
         });
     }
-
 
     // ReverseGeoCodingResultListener 이용시 Override 되는 항목
     @Override
@@ -588,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             if (checkResult) {
                 Log.d("@@@", "start");
                 // 퍼미션 허용, 위치 값을 받아옴
-                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
+                //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
             } else {
                 // 퍼미션 거부, 앱 종료
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {

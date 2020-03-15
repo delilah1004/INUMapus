@@ -3,18 +3,40 @@ package delilah.personal.inumapus.model;
 import com.google.gson.annotations.SerializedName;
 
 public class BuildingModel {
-    @SerializedName("id") // 숫자 - 호관 번호
+    @SerializedName("id")
     public int id;
-
-    @SerializedName("number") // 숫자 - 호관 번호
+    @SerializedName("buildingName") // 건물 이름 - ex.대학본부
+    public String name;
+    @SerializedName("buildingId") // 호관 번호 - 18-1
     public String number;
 
-    @SerializedName("title") // 건물이름 - ex.대학본부
-    public String title;
+    public BuildingModel(int id, String name, String number) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+    }
 
-    @SerializedName("lat") // latitude 경도
-    public double lat;
+    public int getId() {
+        return id;
+    }
 
-    @SerializedName("log") // longitude 위도
-    public double log;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }

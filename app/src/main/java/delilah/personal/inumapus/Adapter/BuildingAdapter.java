@@ -2,7 +2,6 @@ package delilah.personal.inumapus.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,6 @@ public class BuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Intent intent = new Intent(context, FloorActivity.class);
 
                 intent.putExtra("number", item.getNumber());
-                Log.d("확인.put",item.getNumber());
 
                 context.startActivity(intent);
             }

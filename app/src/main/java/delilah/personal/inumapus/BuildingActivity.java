@@ -40,12 +40,8 @@ public class BuildingActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<ArrayList<BuildingModel>> call, @NonNull Response<ArrayList<BuildingModel>> response) {
                 ArrayList<BuildingModel> building = response.body();
-                ArrayList<BuildingModel> arrayList = new ArrayList<>();
 
-                for (int i = 0; i < building.size(); i++) {
-                    arrayList.add(new BuildingModel(building.get(i).id, building.get(i).name, building.get(i).number));
-                }
-                adapter = new BuildingAdapter(BuildingActivity.this, arrayList);
+                adapter = new BuildingAdapter(BuildingActivity.this, building);
                 recyclerView.setAdapter(adapter);
             }
 

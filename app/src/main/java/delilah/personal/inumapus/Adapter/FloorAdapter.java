@@ -14,16 +14,17 @@ import java.util.ArrayList;
 
 import delilah.personal.inumapus.OfficeActivity;
 import delilah.personal.inumapus.R;
+import delilah.personal.inumapus.model.FloorModel;
 
 public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private ArrayList<String> items;
+    private String[] items;
     private String buildingId;
 
-    public FloorAdapter(Context context, ArrayList<String> items, String number) {
+    public FloorAdapter(Context context, String[] items, String buildingId) {
         this.context = context;
         this.items = items;
-        this.buildingId = number;
+        this.buildingId = buildingId;
     }
 
     private static class FloorViewHolder extends RecyclerView.ViewHolder {
@@ -47,7 +48,7 @@ public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final FloorViewHolder viewHolder = (FloorViewHolder) holder;
-        final String floor = items.get(position);
+        final String floor = items[position];
 
         viewHolder.floor.setText(floor);
 
@@ -66,6 +67,6 @@ public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return this.items.size();
+        return this.items.length;
     }
 }

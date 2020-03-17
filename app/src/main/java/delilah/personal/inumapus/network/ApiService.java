@@ -33,7 +33,7 @@ public interface ApiService {
 
     // 층
     @GET("category/send/floorSelect")
-    Call<FloorModel> getFloor(@Query("buildingId") String buildingId);
+    Call<ArrayList<FloorModel>> getFloor(@Query("buildingId") String buildingId);
 
     // office
     @GET("category/send/officeSelect")

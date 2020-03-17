@@ -2,6 +2,9 @@ package delilah.personal.inumapus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,38 +22,56 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OfficeActivity extends AppCompatActivity {
-
-    RecyclerView officeRecyclerView;
-    RecyclerView.LayoutManager officeLayoutManager;
-
+    private RecyclerView recyclerView;
     private OfficeAdapter adapter;
+    String buildingId, floorId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office);
 
-        officeRecyclerView = findViewById(R.id.office_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
-        officeLayoutManager = new LinearLayoutManager(this);
-        officeRecyclerView.setHasFixedSize(true);
-        officeRecyclerView.setLayoutManager(officeLayoutManager);
+        recyclerView = findViewById(R.id.office_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
 
-        Intent intent = getIntent();
-        String number = Objects.requireNonNull(intent.getExtras()).getString("buildingId");
-        String floor = intent.getExtras().getString("floor");
+        OfficeInformation();
 
-        OfficeInformation(number, floor);
+        EditText editSearch = findViewById(R.id.office_search);
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                adapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
-    public void OfficeInformation(String buildingId, String floorId) {
+    public void OfficeInformation() {
+        Intent intent = getIntent();
+        buildingId = Objects.requireNonNull(intent.getExtras()).getString("buildingId");
+        if (intent.getExtras().getString("floor").equals("지하 1")) {
+            floorId = "0";
+        } else {
+            floorId = intent.getExtras().getString("floor");
+        }
+
         NetworkController.getInstance().getApiService().getOffice(buildingId, floorId).enqueue(new Callback<ArrayList<OfficeModel>>() {
             @Override
             public void onResponse(Call<ArrayList<OfficeModel>> call, Response<ArrayList<OfficeModel>> response) {
                 ArrayList<OfficeModel> officeModels = response.body();
 
                 adapter = new OfficeAdapter(OfficeActivity.this, officeModels);
-                officeRecyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override

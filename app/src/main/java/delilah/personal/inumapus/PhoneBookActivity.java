@@ -20,7 +20,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PhoneBookActivity extends AppCompatActivity {
-
     private RecyclerView recyclerView;
     private PhoneBookAdapter adapter;
 

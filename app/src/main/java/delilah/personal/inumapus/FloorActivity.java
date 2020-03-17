@@ -2,16 +2,13 @@ package delilah.personal.inumapus;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import delilah.personal.inumapus.Adapter.FloorAdapter;
 import delilah.personal.inumapus.model.FloorModel;
@@ -24,8 +21,6 @@ public class FloorActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FloorAdapter adapter;
 
-    String number;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,34 +32,45 @@ public class FloorActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        Intent intent = getIntent();
-        number = Objects.requireNonNull(intent.getExtras()).getString("number");
-        Log.d("확인.get",number);
-
         FloorInformation();
     }
 
     public void FloorInformation() {
-        NetworkController.getInstance().getApiService().getFloor(number).enqueue(new Callback<FloorModel>() {
+        Intent intent = getIntent();
+        String number = intent.getExtras().getString("number");
+
+        NetworkController.getInstance().getApiService().getFloor(number).enqueue(new Callback<ArrayList<FloorModel>>() {
             @Override
-            public void onResponse(@NonNull Call<FloorModel> call, @NonNull Response<FloorModel> response) {
-                FloorModel floorModel = response.body();
-                ArrayList<String> floorList = new ArrayList<>();
+            public void onResponse(Call<ArrayList<FloorModel>> call, Response<ArrayList<FloorModel>> response) {
+                ArrayList<FloorModel> floorModel = response.body();
 
-                Log.d("확인.f", String.valueOf(floorModel));
+                String[] floorList = null;
+                String buildingId = null;
+                int max;
+                int index;
 
-                if (floorModel.getBasement() == 1) {
-                    floorList.add("지하1");
+                for (int i = 0; i < floorModel.size(); i++) {
+                    buildingId = floorModel.get(i).buildingId;
+                    max = floorModel.get(i).max;
+
+                    if (floorModel.get(i).basement == 1) {
+                        floorList = new String[max + 1];
+                        floorList[0] = "지하 1";
+                        index = 1;
+                    } else {
+                        floorList = new String[max];
+                        index = 0;
+                    }
+                    for (int j = 1; j <= floorModel.get(i).max; j++,index++) {
+                        floorList[index] = String.valueOf(j);
+                    }
                 }
-                for (int i = 1; i <= floorModel.getMax(); i++) {
-                    floorList.add(String.valueOf(i));
-                }
-                adapter = new FloorAdapter(FloorActivity.this, floorList, floorModel.getNumber());
+                adapter = new FloorAdapter(FloorActivity.this, floorList, buildingId);
                 recyclerView.setAdapter(adapter);
             }
 
             @Override
-            public void onFailure(Call<FloorModel> call, Throwable t) {
+            public void onFailure(Call<ArrayList<FloorModel>> call, Throwable t) {
 
             }
         });

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class FloorModel {
     @SerializedName("buildingId") // 건물 번호 - ex.18-1
-    public String number;
+    public String buildingId;
 
     @SerializedName("buildingName") // 단과대 이름 - ex.복지회관
     public String name;
@@ -15,19 +15,19 @@ public class FloorModel {
     @SerializedName("isBasement") // 지하실 유무
     public int basement;
 
-    public FloorModel(String number, String name, int max, int basement) {
-        this.number = number;
+    public FloorModel(String buildingId, String name, int max, int basement) {
+        this.buildingId = buildingId;
         this.name = name;
         this.max = max;
         this.basement = basement;
     }
 
-    public String getNumber() {
-        return number;
+    public String getBuildingId() {
+        return buildingId;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setBuildingId(String buildingId) {
+        this.buildingId = buildingId;
     }
 
     public String getName() {

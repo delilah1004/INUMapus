@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,14 +17,14 @@ import java.util.Locale;
 import delilah.personal.inumapus.R;
 import delilah.personal.inumapus.model.OfficeModel;
 
-public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private Context context;
-    private ArrayList<OfficeModel> items;
+    private ArrayList<OfficeModel> unfilteredList, filteredList;
 
     public OfficeAdapter(Context context, ArrayList<OfficeModel> items) {
         this.context = context;
-        this.items = items;
+        this.unfilteredList = items;
+        this.filteredList = items;
     }
 
     private static class OfficeViewHolder extends RecyclerView.ViewHolder {
@@ -36,6 +38,7 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
@@ -47,7 +50,7 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final OfficeViewHolder viewHolder = (OfficeViewHolder) holder;
-        final OfficeModel item = items.get(position);
+        final OfficeModel item = filteredList.get(position);
 
         viewHolder.roomId.setText(item.getRoomId());
         viewHolder.officeTitle.setText(item.getTitle());
@@ -55,26 +58,37 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return this.items.size();
+        return this.filteredList.size();
     }
 
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        items.clear();
-        if (charText.length() == 0) {
-            items.addAll(items);
-        } else {
-            for (OfficeModel office : items) {
-                String title = office.getTitle();
-                String number = office.getRoomId();
-                if (title.toLowerCase().contains(charText)) {
-                    items.add(office);
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charText = charSequence.toString();
+                if(charText.isEmpty()) {
+                    filteredList = unfilteredList;
+                } else {
+                    ArrayList<OfficeModel> filteringList = new ArrayList<>();
+                    for(OfficeModel office : unfilteredList) {
+                        String name = office.getTitle();
+                        String number = office.getRoomId();
+                        if (name.toLowerCase().contains(charText)||number.toLowerCase().contains(charText)) {
+                            filteringList.add(office);
+                        }
+                    }
+                    filteredList = filteringList;
                 }
-                else if (number.toLowerCase().contains(charText)){
-                    items.add(office);
-                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
             }
-        }
-        notifyDataSetChanged();
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                notifyDataSetChanged();
+            }
+        };
     }
 }

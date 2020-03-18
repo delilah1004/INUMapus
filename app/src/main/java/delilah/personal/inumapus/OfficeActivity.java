@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,13 +34,13 @@ public class OfficeActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
-        recyclerView = findViewById(R.id.office_recycler_view);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        OfficeInformation();
+        GetInformation();
 
-        EditText editSearch = findViewById(R.id.office_search);
+        TextView editSearch = findViewById(R.id.search);
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,7 +57,7 @@ public class OfficeActivity extends AppCompatActivity {
         });
     }
 
-    public void OfficeInformation() {
+    private void GetInformation() {
         Intent intent = getIntent();
         buildingId = Objects.requireNonNull(intent.getExtras()).getString("buildingId");
         if (intent.getExtras().getString("floor").equals("지하 1")) {
@@ -67,7 +68,7 @@ public class OfficeActivity extends AppCompatActivity {
 
         NetworkController.getInstance().getApiService().getOffice(buildingId, floorId).enqueue(new Callback<ArrayList<OfficeModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<OfficeModel>> call, Response<ArrayList<OfficeModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<OfficeModel>> call, @NonNull Response<ArrayList<OfficeModel>> response) {
                 ArrayList<OfficeModel> officeModels = response.body();
 
                 adapter = new OfficeAdapter(OfficeActivity.this, officeModels);
@@ -75,7 +76,7 @@ public class OfficeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<OfficeModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<OfficeModel>> call, @NonNull Throwable t) {
 
             }
         });

@@ -2,7 +2,10 @@ package delilah.personal.inumapus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,19 +23,32 @@ import retrofit2.Response;
 public class FloorActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FloorAdapter adapter;
+    private String buildingName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_floor);
 
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
         FloorInformation();
+
+        LinearLayout floorEtc = findViewById(R.id.floorEtc);
+        floorEtc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), EtcActivity.class);
+
+                intent.putExtra("buildingName", buildingName); // buildingName
+
+                startActivity(intent);
+            }
+        });
     }
 
     public void FloorInformation() {
@@ -41,7 +57,7 @@ public class FloorActivity extends AppCompatActivity {
 
         NetworkController.getInstance().getApiService().getFloor(number).enqueue(new Callback<ArrayList<FloorModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<FloorModel>> call, Response<ArrayList<FloorModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<FloorModel>> call, @NonNull Response<ArrayList<FloorModel>> response) {
                 ArrayList<FloorModel> floorModel = response.body();
 
                 String[] floorList = null;
@@ -51,6 +67,7 @@ public class FloorActivity extends AppCompatActivity {
 
                 for (int i = 0; i < floorModel.size(); i++) {
                     buildingId = floorModel.get(i).buildingId;
+                    buildingName = floorModel.get(i).name;
                     max = floorModel.get(i).max;
 
                     if (floorModel.get(i).basement == 1) {
@@ -61,7 +78,7 @@ public class FloorActivity extends AppCompatActivity {
                         floorList = new String[max];
                         index = 0;
                     }
-                    for (int j = 1; j <= floorModel.get(i).max; j++,index++) {
+                    for (int j = 1; j <= floorModel.get(i).max; j++, index++) {
                         floorList[index] = String.valueOf(j);
                     }
                 }
@@ -70,7 +87,7 @@ public class FloorActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<FloorModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<FloorModel>> call, @NonNull Throwable t) {
 
             }
         });

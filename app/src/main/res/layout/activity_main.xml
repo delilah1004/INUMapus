@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <net.daum.mf.map.api.MapView
-        android:id="@+id/map_view"
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:id="@+id/search_bar"
+        android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -23,10 +24,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:src="@drawable/logo_small" />
+            android:src="@drawable/logo_small"
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/search_bar_edit"
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -35,11 +37,11 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_mylocation"
+        android:id="@+id/buttonLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_call"
-        android:layout_alignEnd="@+id/btn_filter"
+        android:layout_above="@+id/buttonCall"
+        android:layout_alignEnd="@+id/buttonFilter"
         android:layout_marginBottom="@dimen/between_icon_margin"
         android:backgroundTint="@color/milkWhite"
         android:src="@drawable/btn_mylocation"
@@ -48,11 +50,11 @@
         app:maxImageSize="@dimen/fab_icon_size" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_call"
+        android:id="@+id/buttonCall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_filter"
-        android:layout_alignEnd="@+id/btn_filter"
+        android:layout_above="@+id/buttonFilter"
+        android:layout_alignEnd="@+id/buttonFilter"
         android:layout_marginBottom="@dimen/between_icon_margin"
         android:backgroundTint="@color/colorCall"
         android:src="@drawable/btn_call_map"
@@ -61,13 +63,13 @@
         app:maxImageSize="@dimen/fab_icon_size" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_filter"
+        android:id="@+id/buttonFilter"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="@dimen/margin_from_parents"
-        android:layout_marginBottom="@dimen/margin_from_parents"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_marginBottom="@dimen/between_icon_margin"
         android:backgroundTint="@color/colorFilter"
         android:src="@drawable/btn_filter"
         app:borderWidth="0dp"
@@ -75,12 +77,12 @@
         app:maxImageSize="@dimen/fab_icon_size" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_retire"
+        android:id="@+id/buttonRetire"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_filter"
-        android:layout_marginRight="@dimen/between_icon_margin"
-        android:layout_toLeftOf="@+id/btn_filter"
+        android:layout_alignBottom="@+id/buttonFilter"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_toStartOf="@+id/buttonFilter"
         android:backgroundTint="@color/milkWhite"
         android:src="@drawable/btn_filter_retiringroom"
         android:visibility="invisible"
@@ -89,12 +91,12 @@
         app:maxImageSize="@dimen/fab_text_size_three" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_cafe"
+        android:id="@+id/buttonCafe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_filter"
-        android:layout_marginRight="@dimen/between_icon_margin"
-        android:layout_toLeftOf="@+id/btn_retire"
+        android:layout_alignBottom="@+id/buttonFilter"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_toStartOf="@+id/buttonRetire"
         android:backgroundTint="@color/milkWhite"
         android:src="@drawable/btn_filter_cafe"
         android:visibility="invisible"
@@ -103,12 +105,12 @@
         app:maxImageSize="@dimen/fab_icon_size" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_rest"
+        android:id="@+id/buttonRest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_filter"
-        android:layout_marginRight="@dimen/between_icon_margin"
-        android:layout_toLeftOf="@+id/btn_cafe"
+        android:layout_alignBottom="@+id/buttonFilter"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_toStartOf="@+id/buttonCafe"
         android:backgroundTint="@color/milkWhite"
         android:src="@drawable/btn_filter_restaurant"
         android:visibility="invisible"
@@ -117,12 +119,12 @@
         app:maxImageSize="@dimen/fab_icon_size" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_conv"
+        android:id="@+id/buttonConv"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignBottom="@+id/btn_filter"
-        android:layout_marginRight="@dimen/between_icon_margin"
-        android:layout_toLeftOf="@+id/btn_rest"
+        android:layout_alignBottom="@+id/buttonFilter"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_toStartOf="@+id/buttonRest"
         android:backgroundTint="@color/milkWhite"
         android:src="@drawable/btn_filter_conveniencestore"
         android:visibility="invisible"
@@ -131,12 +133,12 @@
         app:maxImageSize="@dimen/fab_text_size_three" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_all"
+        android:id="@+id/buttonAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_filter"
-        android:layout_marginRight="@dimen/between_icon_margin"
-        android:layout_toLeftOf="@+id/btn_conv"
+        android:layout_alignBottom="@+id/buttonFilter"
+        android:layout_marginEnd="@dimen/between_icon_margin"
+        android:layout_toStartOf="@+id/buttonConv"
         android:backgroundTint="@color/milkWhite"
 
         android:visibility="invisible"

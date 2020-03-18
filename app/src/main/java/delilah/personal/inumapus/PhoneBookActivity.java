@@ -3,8 +3,9 @@ package delilah.personal.inumapus;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,13 +31,13 @@ public class PhoneBookActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
-        recyclerView = findViewById(R.id.phone_book_recycler_view);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        PhoneBookInformation();
+        GetInformation();
 
-        EditText editSearch = findViewById(R.id.phone_search);
+        TextView editSearch = findViewById(R.id.search);
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,10 +54,10 @@ public class PhoneBookActivity extends AppCompatActivity {
         });
     }
 
-    public void PhoneBookInformation() {
+    private void GetInformation() {
         NetworkController.getInstance().getApiService().getPhoneInfo().enqueue(new Callback<ArrayList<PhoneModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<PhoneModel>> call, Response<ArrayList<PhoneModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<PhoneModel>> call, @NonNull Response<ArrayList<PhoneModel>> response) {
                 ArrayList<PhoneModel> phone = response.body();
 
                 adapter = new PhoneBookAdapter(PhoneBookActivity.this, phone);
@@ -64,7 +65,7 @@ public class PhoneBookActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<PhoneModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<PhoneModel>> call, @NonNull Throwable t) {
 
             }
         });

@@ -24,18 +24,18 @@ public class BuildingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_building);
 
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        BuildingInformation();
+        GetInformation();
     }
 
-    public void BuildingInformation() {
+    private void GetInformation() {
         NetworkController.getInstance().getApiService().getBuilding().enqueue(new Callback<ArrayList<BuildingModel>>() {
             @Override
             public void onResponse(@NonNull Call<ArrayList<BuildingModel>> call, @NonNull Response<ArrayList<BuildingModel>> response) {
@@ -46,7 +46,7 @@ public class BuildingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<BuildingModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<BuildingModel>> call, @NonNull Throwable t) {
 
             }
         });

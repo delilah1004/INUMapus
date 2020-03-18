@@ -3,6 +3,7 @@ package delilah.personal.inumapus.network;
 import java.util.ArrayList;
 
 import delilah.personal.inumapus.model.BuildingModel;
+import delilah.personal.inumapus.model.EmployeeModel;
 import delilah.personal.inumapus.model.FilterModel;
 import delilah.personal.inumapus.model.FloorModel;
 import delilah.personal.inumapus.model.MarkerModel;
@@ -12,7 +13,6 @@ import delilah.personal.inumapus.model.PhoneModel;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-
 
 public interface ApiService {
 
@@ -38,4 +38,12 @@ public interface ApiService {
     // office
     @GET("category/send/officeSelect")
     Call<ArrayList<OfficeModel>> getOffice(@Query("buildingId") String buildingId, @Query("floorId") String floorId);
+
+    // employee
+    @GET("category/send/employeeSelect")
+    Call<ArrayList<EmployeeModel>> getEmployee(@Query("officeId") int officeId);
+
+    // etc
+    @GET("category/send/elseEmployee")
+    Call<ArrayList<EmployeeModel>> getEtc(@Query("buildingName") String buildingName);
 }

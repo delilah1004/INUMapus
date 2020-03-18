@@ -5,16 +5,15 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
+import delilah.personal.inumapus.EtcActivity;
 import delilah.personal.inumapus.OfficeActivity;
 import delilah.personal.inumapus.R;
-import delilah.personal.inumapus.model.FloorModel;
 
 public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
@@ -33,7 +32,7 @@ public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private FloorViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            floor = itemView.findViewById(R.id.floor_number);
+            floor = itemView.findViewById(R.id.floorNumber);
         }
     }
 
@@ -49,8 +48,9 @@ public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final FloorViewHolder viewHolder = (FloorViewHolder) holder;
         final String floor = items[position];
+        String text = floor + "층";
 
-        viewHolder.floor.setText(floor);
+        viewHolder.floor.setText(text);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +67,6 @@ public class FloorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return this.items.length;
+        return (items != null ? items.length : 0);
     }
 }

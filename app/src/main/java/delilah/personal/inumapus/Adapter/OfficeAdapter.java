@@ -1,6 +1,7 @@
 package delilah.personal.inumapus.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
+import delilah.personal.inumapus.EmployeeActivity;
 import delilah.personal.inumapus.R;
 import delilah.personal.inumapus.model.OfficeModel;
 
@@ -33,8 +34,8 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         private OfficeViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            roomId = itemView.findViewById(R.id.office_number);
-            officeTitle = itemView.findViewById(R.id.office_title);
+            roomId = itemView.findViewById(R.id.number);
+            officeTitle = itemView.findViewById(R.id.title);
         }
     }
 
@@ -54,6 +55,17 @@ public class OfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         viewHolder.roomId.setText(item.getRoomId());
         viewHolder.officeTitle.setText(item.getTitle());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EmployeeActivity.class);
+
+                intent.putExtra("officeId", item.getOfficeId());
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

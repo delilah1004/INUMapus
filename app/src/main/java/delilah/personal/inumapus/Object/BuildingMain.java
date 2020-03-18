@@ -1,20 +1,18 @@
 package delilah.personal.inumapus.Object;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class BuildingMain {
     @SerializedName("buildingId")
-    @Expose
     private String buildingId;
+
     @SerializedName("buildingName")
-    @Expose
     private String buildingName;
+
     @SerializedName("lat")
-    @Expose
     private Double lat;
+
     @SerializedName("log")
-    @Expose
     private Double log;
 
     public String getBuildingId() {

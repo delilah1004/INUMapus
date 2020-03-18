@@ -32,17 +32,17 @@ public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private static class PhoneBookViewHolder extends RecyclerView.ViewHolder {
         TextView detailOrgan, position, name, phoneNumber;
-        ImageButton btn_call;
+        ImageButton btnCall;
 
         private PhoneBookViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            detailOrgan = itemView.findViewById(R.id.detail_organ);
+            detailOrgan = itemView.findViewById(R.id.organ);
             position = itemView.findViewById(R.id.position);
-            name = itemView.findViewById(R.id.name_person);
-            phoneNumber = itemView.findViewById(R.id.phone_number);
+            name = itemView.findViewById(R.id.name);
+            phoneNumber = itemView.findViewById(R.id.number);
 
-            btn_call = itemView.findViewById(R.id.btn_call_page);
+            btnCall = itemView.findViewById(R.id.buttonCall);
         }
     }
 
@@ -64,7 +64,7 @@ public class PhoneBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.name.setText(item.getName());
         viewHolder.phoneNumber.setText(item.getTelephone());
 
-        viewHolder.btn_call.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, item.getName() + "의 전화번호입니다.", Toast.LENGTH_SHORT).show();

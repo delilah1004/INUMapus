@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="delilah.personal.inumapus">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.DIAL_PHONE" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name="delilah.personal.inumapus.network.NetworkController"
@@ -17,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_mapus_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -33,6 +32,8 @@
 
         <activity android:name=".FirstActivity" />
 
+        <activity android:name=".PhoneBookActivity" />
+
         <activity android:name=".MainActivity" />
 
         <activity android:name=".BuildingActivity" />
@@ -41,7 +42,9 @@
 
         <activity android:name=".OfficeActivity" />
 
-        <activity android:name=".PhoneBookActivity" />
+        <activity android:name=".EmployeeActivity" />
+
+        <activity android:name=".EtcActivity" />
 
     </application>
 

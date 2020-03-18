@@ -38,7 +38,7 @@
         android:layout_width="35dp"
         android:layout_height="36dp"
         android:layout_marginTop="25dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_below="@+id/first_search_bar"
         android:layout_alignEnd="@+id/first_search_bar"
         android:background="@drawable/btn_x"/>
@@ -49,7 +49,7 @@
         android:layout_height="45dp"
         android:layout_below="@+id/first_search_bar"
         android:layout_alignStart="@+id/first_search_bar"
-        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginTop="40dp"
         android:src="@drawable/img_logo" />
 
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/first_info"
         android:layout_alignStart="@+id/first_search_bar"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:orientation="vertical">
 
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_marker" />
 
             <TextView

@@ -31,8 +31,8 @@ public class BuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private BuildingViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            buildingTitle = itemView.findViewById(R.id.building_title);
-            buildingNumber = itemView.findViewById(R.id.building_number);
+            buildingTitle = itemView.findViewById(R.id.title);
+            buildingNumber = itemView.findViewById(R.id.number);
         }
     }
 
@@ -48,9 +48,10 @@ public class BuildingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final BuildingViewHolder viewHolder = (BuildingViewHolder) holder;
         final BuildingModel item = items.get(position);
+        String buildingNumber = item.getNumber() + "호관";
 
         viewHolder.buildingTitle.setText(item.getName());
-        viewHolder.buildingNumber.setText(item.getNumber());
+        viewHolder.buildingNumber.setText(buildingNumber);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
-    private Animation fab_open, fab_close;
+    private Animation fabOpen, fabClose;
     private Boolean isFabOpen = false;
-    private FloatingActionButton btn_call, btn_mylocation, fab, fab1, fab3, fab4, fab5, fab6;
+    private FloatingActionButton btnCall, btnLocation, fab, fab1, fab3, fab4, fab5, fab6;
     private TextView search;
 
     private boolean addedAll, addedRetire, addedCafe, addedRest, addedConv, addedMarker = false;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     // 앱 최초 실행 체크 (true : 최초 실행)
-    public boolean CheckFirstExecute() {
+    public void CheckFirstExecute() {
         SharedPreferences execute = getSharedPreferences("IsFirst", Activity.MODE_PRIVATE);
         boolean isFirst = execute.getBoolean("isFirst", false);
         if (!isFirst) { //최초 실행시 true 저장
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             Intent intent = new Intent(MainActivity.this, FirstActivity.class);
             startActivity(intent);
         }
-        return !isFirst;
     }
 
     @Override
@@ -97,29 +96,27 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     private void declaration() {
+        search = findViewById(R.id.search);
 
-        search = findViewById(R.id.search_bar_edit);
+        fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
 
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+        btnLocation = findViewById(R.id.buttonLocation);
+        btnCall = findViewById(R.id.buttonCall);
+        fab = findViewById(R.id.buttonFilter);
+        fab1 = findViewById(R.id.buttonRetire);
+        fab3 = findViewById(R.id.buttonCafe);
+        fab4 = findViewById(R.id.buttonRest);
+        fab5 = findViewById(R.id.buttonConv);
+        fab6 = findViewById(R.id.buttonAll);
 
-        btn_mylocation = findViewById(R.id.btn_mylocation);
-        btn_call = findViewById(R.id.btn_call);
-        fab = findViewById(R.id.btn_filter);
-        fab1 = findViewById(R.id.btn_retire);
-        fab3 = findViewById(R.id.btn_cafe);
-        fab4 = findViewById(R.id.btn_rest);
-        fab5 = findViewById(R.id.btn_conv);
-        fab6 = findViewById(R.id.btn_all);
-
-        mapView = findViewById(R.id.map_view);
+        mapView = findViewById(R.id.mapView);
 
         mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_mylocation, new MapPOIItem.ImageOffset(46, 55));
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.375, 126.633), true);
     }
 
     private void clickListenerSetting() {
-
         // 검색바
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         });
 
         // 현위치 버튼
-        btn_mylocation.setOnClickListener(new View.OnClickListener() {
+        btnLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!curLocState) {
@@ -150,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         });
 
         // 전화번호부 버튼
-        btn_call.setOnClickListener(new View.OnClickListener() {
+        btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PhoneBookActivity.class);
@@ -321,11 +318,11 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
     private void fabAnimation() {
         if (isFabOpen) {
-            fab1.startAnimation(fab_close);
-            fab3.startAnimation(fab_close);
-            fab4.startAnimation(fab_close);
-            fab5.startAnimation(fab_close);
-            fab6.startAnimation(fab_close);
+            fab1.startAnimation(fabClose);
+            fab3.startAnimation(fabClose);
+            fab4.startAnimation(fabClose);
+            fab5.startAnimation(fabClose);
+            fab6.startAnimation(fabClose);
             fab1.setClickable(false);
             fab3.setClickable(false);
             fab4.setClickable(false);
@@ -339,11 +336,11 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             addedConv = false;
             isFabOpen = false;
         } else {
-            fab1.startAnimation(fab_open);
-            fab3.startAnimation(fab_open);
-            fab4.startAnimation(fab_open);
-            fab5.startAnimation(fab_open);
-            fab6.startAnimation(fab_open);
+            fab1.startAnimation(fabOpen);
+            fab3.startAnimation(fabOpen);
+            fab4.startAnimation(fabOpen);
+            fab5.startAnimation(fabOpen);
+            fab6.startAnimation(fabOpen);
             fab1.setClickable(true);
             fab3.setClickable(true);
             fab4.setClickable(true);
@@ -356,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private void addAllMarker() {
         NetworkController.getInstance().getApiService().getAllMarkers().enqueue(new Callback<MarkerModel>() {
             @Override
-            public void onResponse(Call<MarkerModel> call, Response<MarkerModel> response) {
+            public void onResponse(@NonNull Call<MarkerModel> call, @NonNull Response<MarkerModel> response) {
                 MarkerModel markerModel = response.body();
                 ArrayList<Marker> markers = new ArrayList<>();
 
@@ -396,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
 
             @Override
-            public void onFailure(Call<MarkerModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<MarkerModel> call, @NonNull Throwable t) {
 
             }
         });
@@ -405,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     private void addFilterMarker(final int f_num) {
         NetworkController.getInstance().getApiService().getFilterMarkers(f_num).enqueue(new Callback<ArrayList<FilterModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<FilterModel>> call, Response<ArrayList<FilterModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<FilterModel>> call, @NonNull Response<ArrayList<FilterModel>> response) {
                 ArrayList<FilterModel> filter = response.body();
 
                 for (int i = 0; i < filter.size(); i++) {
@@ -444,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
             }
 
             @Override
-            public void onFailure(Call<ArrayList<FilterModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<FilterModel>> call, @NonNull Throwable t) {
 
             }
         });
@@ -463,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
     }
 
     private void onFinishReverseGeoCoding(String result) {
-        // Toast.makeText(LocationDemoActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
     // CurrentLocationEventListener 이용시 Override 되는 항목
@@ -524,11 +521,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                 }
             }
 
-            if (checkResult) {
-                Log.d("@@@", "start");
-                // 퍼미션 허용, 위치 값을 받아옴
-                //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
-            } else {
+            if (!checkResult) {
                 // 퍼미션 거부, 앱 종료
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {
                     Toast.makeText(MainActivity.this, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.", Toast.LENGTH_LONG).show();
@@ -586,5 +579,4 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-
 }

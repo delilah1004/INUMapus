@@ -14,8 +14,8 @@
         android:fontFamily="@font/nanum_square_round_b"
         android:gravity="end"
         android:text="@string/room_id"
-        android:textColor="@color/bold"
-        android:textSize="17sp" />
+        android:textColor="@color/light"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/title"
@@ -24,6 +24,6 @@
         android:fontFamily="@font/nanum_square_round_b"
         android:text="@string/room_title"
         android:textColor="@color/bold"
-        android:textSize="17sp" />
+        android:textSize="15sp" />
 
 </LinearLayout>

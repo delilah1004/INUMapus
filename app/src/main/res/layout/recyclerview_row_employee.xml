@@ -10,13 +10,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/employee_margin_start"
-        android:layout_marginTop="@dimen/employee_margin"
-        android:layout_marginBottom="@dimen/employee_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/employee_row_padding">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/employee_gap_margin"
             android:orientation="horizontal">
 
             <TextView
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/between_text_margin"
+                android:layout_marginEnd="@dimen/employee_text_margin"
                 android:fontFamily="@font/nanum_square_round_eb"
                 android:text="@string/organ"
                 android:textColor="@color/light"
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/between_text_margin"
+                android:layout_marginEnd="@dimen/employee_text_margin"
                 android:fontFamily="@font/nanum_square_round_eb"
                 android:text="@string/between"
                 android:textColor="@color/light"
@@ -50,20 +50,9 @@
                 android:textColor="@color/light"
                 android:textSize="@dimen/position_font_size" />
 
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/between_text_margin"
-                android:fontFamily="@font/nanum_square_round_eb"
-                android:text="@string/email"
-                android:textColor="@color/light"
-                android:textSize="@dimen/position_font_size" />
-
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -73,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/between_text_margin"
+                android:layout_marginEnd="@dimen/employee_text_margin"
                 android:fontFamily="@font/nanum_square_round_eb"
                 android:text="@string/name"
                 android:textColor="@color/bold"
@@ -85,13 +74,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/between_text_margin"
+                android:layout_toEndOf="@+id/name"
                 android:fontFamily="@font/nanum_square_round_eb"
                 android:text="@string/number"
                 android:textColor="@color/bold"
                 android:textSize="@dimen/name_font_size" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/employee_margin_start"
+                android:fontFamily="@font/nanum_square_round_eb"
+                android:text="@string/email"
+                android:textColor="@color/light"
+                android:textSize="@dimen/position_font_size" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

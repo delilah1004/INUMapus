@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +40,7 @@ public class OfficeActivity extends AppCompatActivity {
 
         GetInformation();
 
-        TextView editSearch = findViewById(R.id.search);
+        EditText editSearch = findViewById(R.id.search);
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

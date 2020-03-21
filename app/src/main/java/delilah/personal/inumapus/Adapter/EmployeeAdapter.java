@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,7 @@ import delilah.personal.inumapus.model.EmployeeModel;
 public class EmployeeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private ArrayList<EmployeeModel> items;
-    private String email;
+    private String email, phone;
 
     public EmployeeAdapter(Context context, ArrayList<EmployeeModel> items) {
         this.context = context;
@@ -51,14 +50,17 @@ public class EmployeeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final EmployeeViewHolder viewHolder = (EmployeeViewHolder) holder;
         final EmployeeModel item = items.get(position);
+        if(item.getTelephone().length()>0){
+            phone = "l " + item.getTelephone();
+        }
         if(item.getEmail().length()>0){
-            email = "l  " + item.getEmail();
+            email = item.getEmail();
         }
 
         viewHolder.detailOrgan.setText(item.getDetailOrgan());
         viewHolder.position.setText(item.getPosition());
         viewHolder.name.setText(item.getName());
-        viewHolder.phoneNumber.setText(item.getTelephone());
+        viewHolder.phoneNumber.setText(phone);
         viewHolder.email.setText(email);
     }
 

@@ -22,7 +22,7 @@
             android:fontFamily="@font/nanum_square_round_b"
             android:text="@string/floor_etc"
             android:textColor="@color/bold"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 

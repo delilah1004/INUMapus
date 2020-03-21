@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <EditText
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints=""
         android:background="@null"
         android:gravity="center"
-        android:hint="@string/search_main"
+        android:hint="@string/search_office"
         android:maxLines="1"
         android:padding="15dp"
         android:singleLine="true" />

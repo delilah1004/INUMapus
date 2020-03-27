@@ -30,7 +30,6 @@ import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
 
-import delilah.personal.inumapus.Adapter.CustomBalloonAdapter;
 import delilah.personal.inumapus.Object.BuildingMain;
 import delilah.personal.inumapus.Object.Marker;
 import delilah.personal.inumapus.Object.OfficeMain;
@@ -389,7 +388,6 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                     marker.setCustomImageResourceId(R.drawable.ic_marker);
                     marker.setCustomImageAutoscale(false);
                     mapView.addPOIItem(marker);
-                    mapView.setCalloutBalloonAdapter(new CustomBalloonAdapter(MainActivity.this, marker));
                 }
             }
 

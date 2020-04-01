@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
@@ -30,6 +31,7 @@ import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
 
+import delilah.personal.inumapus.Adapter.CustomBalloonAdapter;
 import delilah.personal.inumapus.Object.BuildingMain;
 import delilah.personal.inumapus.Object.Marker;
 import delilah.personal.inumapus.Object.OfficeMain;
@@ -40,10 +42,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
+public class MainActivity extends AppCompatActivity implements CalloutBalloonAdapter, MapReverseGeoCoder.ReverseGeoCodingResultListener, MapView.CurrentLocationEventListener {
     private static final String LOG_TAG = "MainActivity";
 
     private MapView mapView;
+    private ArrayList<String> balloonItems;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
 
         mapView = findViewById(R.id.mapView);
 
+        mapView.setCalloutBalloonAdapter(new CustomBalloonAdapter(this, balloonItems));
         mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_mylocation, new MapPOIItem.ImageOffset(46, 55));
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.375, 126.633), true);
     }
@@ -374,17 +378,17 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                 }
 
                 for (int i = 0; i < markers.size(); i++) {
+                    balloonItems = markers.get(i).getOfficeList();
                     MapPOIItem marker = new MapPOIItem();
-                    // 마커 위치
                     marker.setMapPoint(MapPoint.mapPointWithGeoCoord(markers.get(i).getLat(), markers.get(i).getLog()));
-                    // 마커 이름
+
                     marker.setItemName(markers.get(i).getBuildingId() + " " + markers.get(i).getBuildingName());
                     marker.setTag(i);
-                    // 커스텀 말풍선 버튼 없애기
+
                     marker.setShowDisclosureButtonOnCalloutBalloon(false);
-                    // 커스텀 마커 모양
+
                     marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-                    // 마커 이미지
+
                     marker.setCustomImageResourceId(R.drawable.ic_marker);
                     marker.setCustomImageAutoscale(false);
                     mapView.addPOIItem(marker);
@@ -416,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
                     // 마커 이미지
                     switch (f_num) {
                         case 1:
-                            if(filter.get(i).title.substring(0,3).equals("남학생")){
+                            if (filter.get(i).title.substring(0, 3).equals("남학생")) {
                                 marker.setCustomImageResourceId(R.drawable.marker_m_lounge);
                             } else {
                                 marker.setCustomImageResourceId(R.drawable.marker_w_lounge);
@@ -446,7 +450,18 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         });
     }
 
-    // ReverseGeoCodingResultListener 이용시 Override 되는 항목
+    // CalloutBalloonAdapter Override
+    @Override
+    public View getCalloutBalloon(MapPOIItem mapPOIItem) {
+        return null;
+    }
+
+    @Override
+    public View getPressedCalloutBalloon(MapPOIItem mapPOIItem) {
+        return null;
+    }
+
+    // ReverseGeoCodingResultListener Override
     @Override
     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
         mapReverseGeoCoder.toString();
@@ -462,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements MapView.CurrentLo
         Toast.makeText(MainActivity.this, "Reverse Geo-coding : " + result, Toast.LENGTH_SHORT).show();
     }
 
-    // CurrentLocationEventListener 이용시 Override 되는 항목
+    // CurrentLocationEventListener Override
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
